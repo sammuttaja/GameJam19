@@ -17,6 +17,9 @@ public class DayMovement : MonoBehaviour
     public GameObject NightCharacter;
     public Transform StartLocation;
     public GameObject DayTimeUI;
+    public GameObject Floor;
+
+    public GameObject FallObject;
 
     private GameObject PickedObject;
     private List<GameObject> PlacedOBjects = new List<GameObject>();
@@ -26,13 +29,32 @@ public class DayMovement : MonoBehaviour
 
     public void SetFurnice(int index)
     {
-        PickedObject = Instantiate(Furnices[index].obj);
+        int currentIndex = index;
+        if(index == 0)
+        {
+            currentIndex += Random.Range(0, 2);
+        }
+        else if(index == 4)
+        {
+            currentIndex += Random.Range(0, 1);
+        }
+        PickedObject = Instantiate(Furnices[currentIndex].obj);
         picked = true;
         timer = 0.1f;
     }
 
     public void ChangeToNight()
     {
+
+        int randomModes = 2;// Random.Range(1, 3);
+
+        ///Putoavat huonekalut
+        if (randomModes == 2)
+            FallingNight();
+
+        ///jos 1 niin normi yö
+
+        Floor.SetActive(false);
         DayTimeUI.SetActive(false);
         NightCharacter.GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().DisableMouseLock(true);
 
@@ -46,8 +68,18 @@ public class DayMovement : MonoBehaviour
         this.gameObject.SetActive(false);
     }
 
+    private void FallingNight()
+    {
+        FallObject.SetActive(true);
+    }
+
     public void ChangeToDay()
     {
+        Floor.SetActive(true);
+
+        if (FallObject.activeSelf)
+            FallObject.SetActive(false);
+
         DayTimeUI.SetActive(true);
         NightCharacter.transform.position = StartLocation.position;
 

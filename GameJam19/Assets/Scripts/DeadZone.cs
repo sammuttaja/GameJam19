@@ -25,6 +25,7 @@ public class DeadZone : MonoBehaviour
         if (other.gameObject.tag.Contains("Player"))
         {
             other.gameObject.transform.position = StartPosition.position;
+            Debug.Log(other.gameObject.transform.position);
         }
     }
 }
