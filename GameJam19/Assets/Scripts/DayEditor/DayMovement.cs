@@ -16,7 +16,7 @@ public class DayMovement : MonoBehaviour
     public List<DayObjects> Furnices = new List<DayObjects>();
     public GameObject NightCharacter;
     public Transform StartLocation;
-    
+    public GameObject DayTimeUI;
 
     private GameObject PickedObject;
     private List<GameObject> PlacedOBjects = new List<GameObject>();
@@ -28,23 +28,27 @@ public class DayMovement : MonoBehaviour
     {
         PickedObject = Instantiate(Furnices[index].obj);
         picked = true;
-        timer = 1f;
+        timer = 0.1f;
     }
 
     public void ChangeToNight()
     {
+        DayTimeUI.SetActive(false);
         NightCharacter.GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().DisableMouseLock(true);
 
         NightCharacter.SetActive(true);
         foreach (var item in PlacedOBjects)
         {
             item.GetComponent<Collider>().enabled = true;
+            if (item.name.Contains("chair"))
+                item.transform.Rotate(new Vector3(0, 0, 1), 90f);
         }
         this.gameObject.SetActive(false);
     }
 
     public void ChangeToDay()
     {
+        DayTimeUI.SetActive(true);
         NightCharacter.transform.position = StartLocation.position;
 
         NightCharacter.GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().DisableMouseLock(false);
@@ -86,7 +90,7 @@ public class DayMovement : MonoBehaviour
                 picked = false;
                 PlacedOBjects.Add(PickedObject);
                 if(Physics.Raycast(cam.ScreenPointToRay(Input.mousePosition), out RaycastHit hit)){
-                    PickedObject.transform.position = hit.point + new Vector3(0, PickedObject.GetComponent<Collider>().bounds.extents.y, 0);
+                    PickedObject.transform.position = hit.point;// + new Vector3(0, PickedObject.GetComponent<Collider>().bounds.extents.y, 0);
 
                 }
             }

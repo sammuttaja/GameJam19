@@ -952,10 +952,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10
   Furnices:
-  - obj: {fileID: 2116460238298404155, guid: 34064c9f508eee243a0f08fbc5225038, type: 3}
+  - obj: {fileID: 7198356460888850563, guid: 9ce5363c6910419478c63b2559fe4743, type: 3}
+    Amount: 0
+  - obj: {fileID: 8889345798743325480, guid: cc89eedfcd48d044bae2a9c4586fc9b9, type: 3}
+    Amount: 0
+  - obj: {fileID: 5689560581278078240, guid: f53a67b233c26bd43b22bd4b379e8204, type: 3}
+    Amount: 0
+  - obj: {fileID: 7665049868995659552, guid: 0fc4397e815a2eb44a0194ded2ed8899, type: 3}
+    Amount: 0
+  - obj: {fileID: 8215313549985564386, guid: 4da509fe07ae0064c8c83268cf77f642, type: 3}
     Amount: 0
   NightCharacter: {fileID: 1936753356}
   StartLocation: {fileID: 635339893}
+  DayTimeUI: {fileID: 0}
 --- !u!81 &1819440957
 AudioListener:
   m_ObjectHideFlags: 0
