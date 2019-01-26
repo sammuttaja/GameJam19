@@ -18,8 +18,15 @@ public class DayMovement : MonoBehaviour
     public Transform StartLocation;
     public GameObject DayTimeUI;
     public GameObject Floor;
-
+    [Header(header: "Light settings")]
+    public GameObject Light;
+    public Vector3 NightDirection;
+    public Vector3 DayDirection;
+    [Header(header: "Falling night")]
     public GameObject FallObject;
+
+    [Header(header: "Fire night")]
+    public GameObject FireController;
 
     private GameObject PickedObject;
     private List<GameObject> PlacedOBjects = new List<GameObject>();
@@ -45,7 +52,7 @@ public class DayMovement : MonoBehaviour
 
     public void ChangeToNight()
     {
-
+        Light.transform.rotation = Quaternion.Euler(NightDirection);
         int randomModes = 2;// Random.Range(1, 3);
 
         ///Putoavat huonekalut
@@ -73,10 +80,15 @@ public class DayMovement : MonoBehaviour
         FallObject.SetActive(true);
     }
 
+    private void FireNight()
+    {
+        FireController.SetActive(true);
+    }
+
     public void ChangeToDay()
     {
         Floor.SetActive(true);
-
+        Light.transform.rotation = Quaternion.Euler(DayDirection);
         if (FallObject.activeSelf)
             FallObject.SetActive(false);
 
