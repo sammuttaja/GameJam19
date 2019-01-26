@@ -57,6 +57,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
 			m_MouseLook.Init(transform , m_Camera.transform);
         }
 
+        public void DisableMouseLock(bool value)
+        {
+            m_MouseLook.SetCursorLock(value);
+        }
+
 
         // Update is called once per frame
         private void Update()

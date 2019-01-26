@@ -5,9 +5,17 @@ using UnityEngine;
 public class DayMovement : MonoBehaviour
 {
 
+    [System.Serializable]
+    public class DayObjects
+    {
+        public GameObject obj;
+        public int Amount;
+    }
+
     public float speed = 10f;
-    public List<GameObject> Furnices = new List<GameObject>();
+    public List<DayObjects> Furnices = new List<DayObjects>();
     public GameObject NightCharacter;
+    public Transform StartLocation;
     
 
     private GameObject PickedObject;
@@ -18,19 +26,34 @@ public class DayMovement : MonoBehaviour
 
     public void SetFurnice(int index)
     {
-        PickedObject = Instantiate(Furnices[index]);
+        PickedObject = Instantiate(Furnices[index].obj);
         picked = true;
         timer = 1f;
     }
 
     public void ChangeToNight()
     {
+        NightCharacter.GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().DisableMouseLock(true);
+
         NightCharacter.SetActive(true);
         foreach (var item in PlacedOBjects)
         {
             item.GetComponent<Collider>().enabled = true;
         }
         this.gameObject.SetActive(false);
+    }
+
+    public void ChangeToDay()
+    {
+        NightCharacter.transform.position = StartLocation.position;
+
+        NightCharacter.GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().DisableMouseLock(false);
+        NightCharacter.SetActive(false);
+        
+        foreach(GameObject obj in PlacedOBjects)
+        {
+            obj.GetComponent<Collider>().enabled = false;
+        }
     }
 
     private void Start()
@@ -41,15 +64,23 @@ public class DayMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float horizon = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+   //     float horizon = Input.GetAxis("Horizontal");
+        //float vertical = Input.GetAxis("Vertical");
 
-        transform.Translate(new Vector3(horizon * Time.deltaTime * speed, vertical * Time.deltaTime * speed, 0));
+        //transform.Translate(new Vector3(horizon * Time.deltaTime * speed, vertical * Time.deltaTime * speed, 0));
 
         if (picked)
         {
-            PickedObject.transform.position = cam.ScreenToWorldPoint(Input.mousePosition);
-            
+
+
+            if (Physics.Raycast(cam.ScreenPointToRay(Input.mousePosition), out RaycastHit planePos))
+            {
+                Vector3 pos = cam.ScreenToWorldPoint(planePos.point);
+                Debug.Log(pos);
+                pos.y = 0.5f;
+                PickedObject.transform.position = pos;
+            }
+
             if (Input.GetMouseButtonDown(0) && timer <= 0)
             {
                 picked = false;
@@ -62,4 +93,6 @@ public class DayMovement : MonoBehaviour
             timer -= Time.deltaTime;
         }
     }
+
+
 }
