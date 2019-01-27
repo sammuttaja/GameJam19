@@ -22,6 +22,11 @@ public class DayMovement : MonoBehaviour
     public GameObject Light;
     public Vector3 NightDirection;
     public Vector3 DayDirection;
+
+    [Header(header: "Night Platforms")]
+    public GameObject startPlatform;
+    public GameObject EndPlatform;
+
     [Header(header: "Falling night")]
     public GameObject FallObject;
 
@@ -50,18 +55,32 @@ public class DayMovement : MonoBehaviour
         timer = 0.1f;
     }
 
+    [SerializeField]
+    private int doneLevels = 0;
+
     public void ChangeToNight()
     {
         Light.transform.rotation = Quaternion.Euler(NightDirection);
-        int randomModes = 2;// Random.Range(1, 3);
+        int randomModes = Random.Range(1, 3);
 
         ///Putoavat huonekalut
         if (randomModes == 2)
             FallingNight();
+        switch (randomModes)
+        {
+            case 1:
+                JumpNight();
+                break;
+            case 2:
+                FallingNight();
+                break;
+            case 3:
+                FireNight();
+                break;
+        }
 
         ///jos 1 niin normi yö
 
-        Floor.SetActive(false);
         DayTimeUI.SetActive(false);
         NightCharacter.GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().DisableMouseLock(true);
 
@@ -75,18 +94,37 @@ public class DayMovement : MonoBehaviour
         this.gameObject.SetActive(false);
     }
 
+    private void JumpNight()
+    {
+        startPlatform.SetActive(true);
+        EndPlatform.SetActive(true);
+        Floor.SetActive(false);
+
+    }
+
     private void FallingNight()
     {
+        startPlatform.SetActive(true);
+        EndPlatform.SetActive(true);
+        Floor.SetActive(false);
+
         FallObject.SetActive(true);
     }
 
     private void FireNight()
     {
         FireController.SetActive(true);
+        FireController.GetComponent<FireControll>().furnices = PlacedOBjects;
     }
 
     public void ChangeToDay()
     {
+        doneLevels++;
+        startPlatform.SetActive(false);
+        EndPlatform.SetActive(false);
+        if (FireController.activeSelf)
+            FireController.SetActive(false);
+
         Floor.SetActive(true);
         Light.transform.rotation = Quaternion.Euler(DayDirection);
         if (FallObject.activeSelf)
@@ -112,15 +150,9 @@ public class DayMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-   //     float horizon = Input.GetAxis("Horizontal");
-        //float vertical = Input.GetAxis("Vertical");
-
-        //transform.Translate(new Vector3(horizon * Time.deltaTime * speed, vertical * Time.deltaTime * speed, 0));
 
         if (picked)
         {
-
-
             if (Physics.Raycast(cam.ScreenPointToRay(Input.mousePosition), out RaycastHit planePos))
             {
                 Vector3 pos = cam.ScreenToWorldPoint(planePos.point);
@@ -141,6 +173,4 @@ public class DayMovement : MonoBehaviour
             timer -= Time.deltaTime;
         }
     }
-
-
 }
