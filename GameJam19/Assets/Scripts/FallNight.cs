@@ -39,7 +39,7 @@ public class FallNight : MonoBehaviour
         {
             GameObject s = Instantiate(FallingGameobjects[Random.Range(0, FallingGameobjects.Count - 1)]);
             s.AddComponent<FallingNightMovement>();
-            Debug.Log(index % (SpawnPositions.Count - 1));
+
             s.transform.position = SpawnPositions[index % (SpawnPositions.Count - 1)].position;
             Destroy(s, 5);
             index++;
