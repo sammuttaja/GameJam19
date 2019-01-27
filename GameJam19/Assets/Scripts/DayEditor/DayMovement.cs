@@ -60,6 +60,7 @@ public class DayMovement : MonoBehaviour
     private Camera cam;
     private bool picked = false;
 
+    public GameObject EndUI;
     
     public bool NightStarted = false;
 
@@ -67,7 +68,10 @@ public class DayMovement : MonoBehaviour
     private void Start()
     {
         cam = GetComponent<Camera>();
-        currentLevel = Random.Range(0, 2);
+        currentLevel = Random.Range(0, 3);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
     }
 
     public void SetFurnice(int index)
@@ -114,7 +118,7 @@ public class DayMovement : MonoBehaviour
                 item.transform.Rotate(new Vector3(0, 0, 1), 90f);
         }
         this.gameObject.SetActive(false);
-        currentLevel = ((currentLevel+ 1) % 2);
+        currentLevel = ((currentLevel+ 1) % 3);
         Debug.Log(currentLevel);
 
         switch (currentLevel)
@@ -166,15 +170,28 @@ public class DayMovement : MonoBehaviour
         NightCharacter.GetComponent<RoomLoopMusicController>().SetMusic(info);
     }
 
+   private void DisableMusic()
+    {
+        RoomAmbiet.GetComponent<AudioSource>().enabled = false;
+
+    }
+
     public void ChangeToDay()
     {
         doneLevels++;
-
-        if(doneLevels >= 3)
+        if (doneLevels >= 3)
         {
-            SceneManager.LoadScene(2); // Toka kenttä
+            if (doneLevels >= 3 && SceneManager.GetActiveScene().name != "Level2")
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                SceneManager.LoadScene(2); // Toka kenttä
+            }
+            else
+            {
+                EndScene();
+            }
         }
-
         startPlatform.SetActive(false);
         EndPlatform.SetActive(false);
         if (FireController.activeSelf)
@@ -197,6 +214,19 @@ public class DayMovement : MonoBehaviour
         }
 
         ChangeToNight();
+    }
+
+    private void EndScene()
+    {
+        NightCharacter.GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().DisableMouseLock(true);
+        NightCharacter.GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().enabled = false;
+        NightCharacter.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+        RoomAmbiet.GetComponent<AudioSource>().enabled = false;
+        NightCharacter.GetComponent<RoomLoopMusicController>().DisableMusic();
+
+        GetComponent<AudioSource>().Play();
+        EndUI.SetActive(true);
+        
     }
 
 

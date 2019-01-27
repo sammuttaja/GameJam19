@@ -23,5 +23,11 @@ public class RoomLoopMusicController : MonoBehaviour
         transform.GetChild(0).GetComponent<AudioSource>().Play();
     }
 
+    public void DisableMusic()
+    {
+        StartMusic.enabled = false;
+        transform.GetChild(0).GetComponentInChildren<AudioSource>().enabled = false;
+    }
+
 
 }
